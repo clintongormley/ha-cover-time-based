@@ -1159,7 +1159,7 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
                         False,
                     )
 
-                if self._is_button:
+                if self._input_mode in (INPUT_MODE_PULSE, INPUT_MODE_TOGGLE):
                     await sleep(1)
 
                     await self.hass.services.async_call(
@@ -1199,7 +1199,7 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
                         {"entity_id": self._stop_switch_entity_id},
                         False,
                     )
-                if self._is_button:
+                if self._input_mode in (INPUT_MODE_PULSE, INPUT_MODE_TOGGLE):
                     await sleep(1)
 
                     await self.hass.services.async_call(
@@ -1219,6 +1219,40 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
                     {"entity_id": self._cover_entity_id},
                     False,
                 )
+            elif self._input_mode == INPUT_MODE_TOGGLE:
+                # Toggle mode: pulse the last-used direction button to stop
+                if self._last_command == SERVICE_CLOSE_COVER:
+                    await self.hass.services.async_call(
+                        "homeassistant",
+                        "turn_on",
+                        {"entity_id": self._close_switch_entity_id},
+                        False,
+                    )
+                    await sleep(1)
+                    await self.hass.services.async_call(
+                        "homeassistant",
+                        "turn_off",
+                        {"entity_id": self._close_switch_entity_id},
+                        False,
+                    )
+                elif self._last_command == SERVICE_OPEN_COVER:
+                    await self.hass.services.async_call(
+                        "homeassistant",
+                        "turn_on",
+                        {"entity_id": self._open_switch_entity_id},
+                        False,
+                    )
+                    await sleep(1)
+                    await self.hass.services.async_call(
+                        "homeassistant",
+                        "turn_off",
+                        {"entity_id": self._open_switch_entity_id},
+                        False,
+                    )
+                else:
+                    _LOGGER.debug(
+                        "_async_handle_command :: STOP in toggle mode with no last command, skipping"
+                    )
             else:
                 await self.hass.services.async_call(
                     "homeassistant",
@@ -1240,7 +1274,7 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
                         False,
                     )
 
-                    if self._is_button:
+                    if self._input_mode == INPUT_MODE_PULSE:
                         await sleep(1)
 
                         await self.hass.services.async_call(
