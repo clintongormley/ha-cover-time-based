@@ -766,9 +766,9 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
         self._cancel_delay_task()
         self._handle_stop()
         self._enforce_tilt_constraints()
-        self._last_command = None
-        
+
         await self._async_handle_command(SERVICE_STOP_COVER)
+        self._last_command = None
 
     async def set_position(self, position):
         """Move cover to a designated position."""
