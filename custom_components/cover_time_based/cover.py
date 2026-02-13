@@ -50,6 +50,10 @@ CONF_OPEN_SWITCH_ENTITY_ID = "open_switch_entity_id"
 CONF_CLOSE_SWITCH_ENTITY_ID = "close_switch_entity_id"
 CONF_STOP_SWITCH_ENTITY_ID = "stop_switch_entity_id"
 CONF_IS_BUTTON = "is_button"
+CONF_INPUT_MODE = "input_mode"
+INPUT_MODE_SWITCH = "switch"
+INPUT_MODE_PULSE = "pulse"
+INPUT_MODE_TOGGLE = "toggle"
 
 CONF_COVER_ENTITY_ID = "cover_entity_id"
 
@@ -78,6 +82,9 @@ SWITCH_COVER_SCHEMA = {
     vol.Required(CONF_CLOSE_SWITCH_ENTITY_ID): cv.entity_id,
     vol.Optional(CONF_STOP_SWITCH_ENTITY_ID, default=None): vol.Any(cv.entity_id, None),
     vol.Optional(CONF_IS_BUTTON, default=False): cv.boolean,
+    vol.Optional(CONF_INPUT_MODE, default=None): vol.Any(
+        vol.In([INPUT_MODE_SWITCH, INPUT_MODE_PULSE, INPUT_MODE_TOGGLE]), None
+    ),
     **TRAVEL_TIME_SCHEMA,
 }
 
