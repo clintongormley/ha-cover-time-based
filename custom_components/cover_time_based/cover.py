@@ -276,7 +276,7 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
         open_switch_entity_id,
         close_switch_entity_id,
         stop_switch_entity_id,
-        is_button,
+        input_mode,
         cover_entity_id,
     ):
         """Initialize the cover."""
@@ -295,7 +295,7 @@ class CoverTimeBased(CoverEntity, RestoreEntity):
         self._open_switch_entity_id = open_switch_entity_id
         self._close_switch_entity_id = close_switch_entity_id
         self._stop_switch_entity_id = stop_switch_entity_id
-        self._is_button = is_button
+        self._input_mode = input_mode
 
         self._cover_entity_id = cover_entity_id
 
