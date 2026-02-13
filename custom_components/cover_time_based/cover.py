@@ -201,6 +201,23 @@ def devices_from_config(domain_config):
             else None
         )
         is_button = config.pop(CONF_IS_BUTTON) if CONF_IS_BUTTON in config else False
+        input_mode = config.pop(CONF_INPUT_MODE, None) if CONF_INPUT_MODE in config else None
+
+        if input_mode is not None and is_button:
+            _LOGGER.warning(
+                "Device '%s': both 'is_button' and 'input_mode' are set. "
+                "'input_mode: %s' takes precedence. Please remove 'is_button'.",
+                device_id, input_mode,
+            )
+        elif is_button:
+            input_mode = INPUT_MODE_PULSE
+            _LOGGER.warning(
+                "Device '%s': 'is_button' is deprecated. "
+                "Use 'input_mode: pulse' instead.",
+                device_id,
+            )
+        elif input_mode is None:
+            input_mode = INPUT_MODE_SWITCH
 
         cover_entity_id = (
             config.pop(CONF_COVER_ENTITY_ID) if CONF_COVER_ENTITY_ID in config else None
@@ -221,7 +238,7 @@ def devices_from_config(domain_config):
             open_switch_entity_id,
             close_switch_entity_id,
             stop_switch_entity_id,
-            is_button,
+            input_mode,
             cover_entity_id,
         )
         devices.append(device)
