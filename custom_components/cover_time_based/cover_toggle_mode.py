@@ -99,9 +99,21 @@ class ToggleModeCover(SwitchCoverTimeBased):
         self._last_external_toggle_time[entity_id] = now
 
         if entity_id == self._open_switch_entity_id:
+            if self.is_opening:
+                self._log(
+                    "_handle_external_state_change :: "
+                    "already opening, ignoring late echo"
+                )
+                return
             self._log("_handle_external_state_change :: external open toggle detected")
             await self.async_open_cover()
         elif entity_id == self._close_switch_entity_id:
+            if self.is_closing:
+                self._log(
+                    "_handle_external_state_change :: "
+                    "already closing, ignoring late echo"
+                )
+                return
             self._log("_handle_external_state_change :: external close toggle detected")
             await self.async_close_cover()
 
